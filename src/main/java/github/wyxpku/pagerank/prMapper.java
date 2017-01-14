@@ -5,6 +5,8 @@ import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 
@@ -24,12 +26,37 @@ public class prMapper extends Mapper<LongWritable, Text, LongWritable, Text> {
             if (splited.length == 0)
                 return;
             double pr = Double.parseDouble(splited[0]);
-            int count = splited.length - 1;
-            for (int i = 1; i < splited.length; ++i){
-                context.write(new LongWritable(Long.parseLong(splited[i])), new Text("@" + pr/count));
-                context.write(new LongWritable(src), new Text("#" + splited[i]));
+
+            ArrayList<Long> tlist = new ArrayList<Long>();
+            ArrayList<Long> flist = new ArrayList<Long>();
+            for (int i = 1; i < splited.length; i++){
+                String tmp = splited[i];
+                if (tmp.charAt(0) == 'T') {
+                    tlist.add(Long.parseLong(tmp.substring(1)));
+                } else if (tmp.charAt(0) == 'F') {
+                    flist.add(Long.parseLong(tmp.substring(1)));
+                }
             }
+
+            // size of tlist is zero, which means a black hole
+            if (tlist.size() == 0) {
+                for (Long ilong: flist) {
+                    context.write(new LongWritable(ilong), new Text("@" + pr / flist.size()));
+                }
+            } else {
+                for (Long ilong: tlist) {
+                    context.write(new LongWritable(ilong), new Text("@" + pr / tlist.size()));
+                }
+            }
+
             context.write(new LongWritable(src), new Text("$" + pr));
+
+            for (Long ilong: tlist) {
+                context.write(new LongWritable(src), new Text("#T" + ilong));
+            }
+            for (Long ilong: flist) {
+                context.write(new LongWritable(src), new Text("#F" + ilong));
+            }
         }
     }
 }

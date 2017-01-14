@@ -21,7 +21,7 @@ public class pagerank {
     };
     public static void main(String[] args) throws Exception {
         Configuration conf = new Configuration();
-        FileSystem.setDefaultUri(conf, new URI("hdfs://10.2.209.191:9000"));
+        FileSystem.setDefaultUri(conf, new URI("hdfs://localhost:9000"));
         for (int i = 0; i < 100; i++) {
             System.out.println("pagerank: loop " + i);
             Job job = Job.getInstance(conf, "pagerank-"+i);
@@ -36,8 +36,8 @@ public class pagerank {
             job.setOutputValueClass(Text.class);
 
             // TODO: specify input and output DIRECTORIES (not files)
-//            FileInputFormat.setInputPaths(job, new Path("hdfs://10.2.209.191:9000/Input"));
-//            FileOutputFormat.setOutputPath(job, new Path("hdfs://10.2.209.191:9000/prepOutput"));
+//            FileInputFormat.setInputPaths(job, new Path("hdfs://localhost:9000/Input"));
+//            FileOutputFormat.setOutputPath(job, new Path("hdfs://localhost:9000/prepOutput"));
             if (i == 0)
                 FileInputFormat.setInputPaths(job, new Path("/prepOutput"));
             else

@@ -14,7 +14,10 @@ public class prepMapper extends Mapper<LongWritable, Text, Text, Text> {
 	public void map(LongWritable ikey, Text ivalue, Context context) throws IOException, InterruptedException {
 		Matcher m = p.matcher(ivalue.toString());
 		if (m.find()) {
-			context.write(new Text(m.group(1)), new Text(m.group(2)));
+			String src = m.group(1);
+			String tag = m.group(2);
+			context.write(new Text(m.group(1)), new Text("T" + m.group(2)));
+			context.write(new Text(m.group(2)), new Text("F" + m.group(1)));
 		}
 	}
 

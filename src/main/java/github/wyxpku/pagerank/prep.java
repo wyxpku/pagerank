@@ -22,8 +22,8 @@ public class prep {
 		job.setOutputValueClass(Text.class);
 
 		// TODO: specify input and output DIRECTORIES (not files)
-		FileInputFormat.setInputPaths(job, new Path("hdfs://10.2.209.191:9000/Input"));
-		FileOutputFormat.setOutputPath(job, new Path("hdfs://10.2.209.191:9000/prepOutput"));
+		FileInputFormat.setInputPaths(job, new Path("hdfs://localhost:9000/Input"));
+		FileOutputFormat.setOutputPath(job, new Path("hdfs://localhost:9000/prepOutput"));
 
 		if (!job.waitForCompletion(true))
 			return;
